@@ -38,6 +38,7 @@ public class Colosseum {
      */
     static Scanner myScan;
 
+    Thread t;
     /**
      * We are now reimplementing this to meet our new Pokemon specifications. <br>
      * The process will still be the same for getting the information from the user,
@@ -102,8 +103,36 @@ public class Colosseum {
      * (Look, we can return objects too!)
      */
     public static Pokemon buildPokemon() {
-        Pokemon returnPokemon = null;
+        Pokemon returnPokemon = new Pokemon();
+        int setType = selectPokemonType();
+        switch (setType) {
+            case 1: returnPokemon.pokeType = Pokemon.PokemonType.ELECTRIC;
+                //ElectricPokemon electricPokemon = (ElectricPokemon) returnPokemon;
+                //return setUpPokemon(electricPokemon);
+                break;
+            case 2: returnPokemon.pokeType = Pokemon.PokemonType.FIRE;
+                //FirePokemon firePokemon = (FirePokemon) returnPokemon;
+                //return setUpPokemon(firePokemon);
+                break;
+            case 3: returnPokemon.pokeType = Pokemon.PokemonType.WATER;
+                //WaterPokemon waterPokemon = (WaterPokemon) returnPokemon;
+                //return setUpPokemon(waterPokemon);
+                break;
+            default:
+                return null;
+        }
+
+        String setName = setName();
+        int setHp = setHp();
+        int setAttackLevel = setAttackLevel();
+        int setDefenseLevel = setDefenseLevel();
+
+        returnPokemon.setHitPoints(setHp);
+        returnPokemon.setName(setName);
+        returnPokemon.setAttackLevel(setAttackLevel);
+        returnPokemon.setDefenseLevel(setDefenseLevel);
         return returnPokemon;
+
     }
 
     /**
@@ -200,7 +229,6 @@ public class Colosseum {
         System.out.println("1 - Electric Pokemon ");
         System.out.println("2 - Fire Pokemon");
         System.out.println("3 - Water Pokemon");
-
     }
 
     /**
@@ -226,13 +254,26 @@ public class Colosseum {
             System.out.println("");
 
             ifWinner = firstPokemon.attack(secondPokemon);
+
+            try {
+                // thread to sleep for 1000 milliseconds
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
             if (!ifWinner) {
                 ifWinner = secondPokemon.attack(firstPokemon);
+                try {
+                    // thread to sleep for 1000 milliseconds
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
                 if (!ifWinner) {
                     printWhoIsAhead();
                 }
-
             }
+
         }
         System.out.println("");
 
@@ -243,5 +284,105 @@ public class Colosseum {
         }
 
         myScan.close();
+    }
+    private static int setHp() {
+        System.out.println("How many hit points will it have? (1-50) ");
+        int inputHp = 0;
+        boolean stepOne = false;
+        while (!stepOne) {
+            try {
+                inputHp = Integer.parseInt(myScan.nextLine());
+            } catch (Exception NumberFormatException) {
+                System.out.println("Incorrect input");
+            }
+            if (inputHp > MAX_HIT_POINTS || inputHp <= 0 ) {
+                System.out.println("HP not in bound");
+                System.out.println("Sorry. Hit points must be between 1 and 50");
+            } else {
+                stepOne = true;
+            }
+        }
+        return inputHp;
+    }
+    private static String setName() {
+        System.out.println("Please name your Pokemon:");
+        return myScan.nextLine();
+    }
+    private static int setAttackLevel() {
+        int inputChoice = 0;
+        boolean stepOne = false;
+        while (!stepOne) {
+            System.out.println("Enter your attack level (1-49):");
+            try {
+                inputChoice = Integer.parseInt(myScan.nextLine());
+            } catch (Exception NumberFormatException) {
+                System.out.println("Incorrect input");
+            }
+            if (inputChoice > 49 || inputChoice < 1) {
+                System.out.println("Input is not in bound");
+                System.out.println("Enter your attack level (1-49):");
+            } else {
+                stepOne = true;
+            }
+        }
+        return inputChoice;
+    }
+    private static int selectPokemonType() {
+        printPokeTypeList();
+        int inputChoice = 0;
+        boolean stepOne = false;
+        while (!stepOne) {
+            try {
+                inputChoice = Integer.parseInt(myScan.nextLine());
+            } catch (Exception NumberFormatException) {
+                System.out.println("Incorrect input");
+            }
+            if (inputChoice > 3 || inputChoice < 1) {
+                System.out.println("Input is not in bound");
+                System.out.println("Please enter a number from 1 to 3");
+                printPokeTypeList();
+            } else {
+                stepOne = true;
+            }
+        }
+        return inputChoice;
+    }
+    private static void printPokeTypeList() {
+        System.out.println("Select from the following Pokemon types:");
+        System.out.println(
+                "1 - Electric Pokemon <br>\n" +
+                        "2 - Fire Pokemon <br>\n" +
+                        "3 - Water Pokemon <br>\n");
+    }
+    private static int setDefenseLevel() {
+        int inputChoice = 0;
+        boolean stepOne = false;
+        while (!stepOne) {
+            System.out.println("Enter your defense level (1-23):");
+            try {
+                inputChoice = Integer.parseInt(myScan.nextLine());
+            } catch (Exception NumberFormatException) {
+                System.out.println("Incorrect input");
+            }
+            if (inputChoice > 49 || inputChoice < 1) {
+                System.out.println("Input is not in bound");
+                //System.out.println("Enter your defense level (1-23):");
+            } else {
+                stepOne = true;
+            }
+        }
+        return inputChoice;
+    }
+    private static Pokemon setUpPokemon(Pokemon pokemon) {
+        String setName = setName();
+        int setHp = setHp();
+        int setAttackLevel = setAttackLevel();
+        int setDefenseLevel = setDefenseLevel();
+
+        pokemon.setHitPoints(setHp);
+        pokemon.setName(setName);
+        pokemon.setAttackLevel(setAttackLevel);
+        pokemon.setDefenseLevel(setDefenseLevel);
+        return pokemon;
     }
 }
